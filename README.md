@@ -20,6 +20,6 @@ With inConcert, I'm trying to take on as many new challenges/technologies as pos
 
 ## Todo
 * Build simple frontend to enable login via Spotify
-* Use gig list to artists' top tracks
+* Use gig list to get artists' top tracks
 * Create spotify playlist in user's account
 * Build out full frontend
