@@ -4,6 +4,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var locationRouter = require('./routes/location');
+var gigRouter = require('./routes/gig');
 
 var app = express();
 
@@ -14,5 +15,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(locationRouter);
+app.use(gigRouter);
 
 module.exports = app;
