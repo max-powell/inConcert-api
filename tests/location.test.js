@@ -13,8 +13,8 @@ test('Should return a list of locations given a valid search', async () => {
   const londonUK = results[0]
   expect(londonUK).toEqual({name: 'London, UK', id: expect.any(Number)})
 
-  const londonKY = results[1]
-  expect(londonKY).toEqual({name: 'London, ON, Canada', id: expect.any(Number)})
+  const londonCanada = results[1]
+  expect(londonCanada).toEqual({name: 'London, ON, Canada', id: expect.any(Number)})
 })
 
 test('Should return an error if no search term given', async () => {
