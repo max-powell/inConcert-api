@@ -26,3 +26,10 @@ test('Should return an error given an invalid search', async () => {
   const error = res.body
   expect(error.message).toBeTruthy()
 })
+
+test('Should return an error if no search term given', async () => {
+  await request(app)
+    .get('/locations')
+    .send()
+    .expect(400)
+})
