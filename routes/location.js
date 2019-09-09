@@ -8,8 +8,12 @@ router.get('/locations', async (req, res) => {
     return res.status(400).send()
   }
 
-  const results = await songkick.searchLocations(req.query.query)
-  res.send(results)
+  try {
+    const results = await songkick.searchLocations(req.query.query)
+    res.send(results)
+  } catch (e) {
+    res.status(500).send(e)
+  }
 })
 
 module.exports = router
