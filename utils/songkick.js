@@ -48,6 +48,26 @@ name += `, ${country}`
 return name
 }
 
+const getGigs = async (metroAreaId, date) => {
+  const eventsSearchUrl = `${rootURL}/events.json`
+
+  const options = {
+    uri: eventsSearchUrl,
+    qs: {
+      location: `sk:${metroAreaId}`,
+      min_date: date,
+      max_date: date,
+      apikey: process.env.SONGKICK_API_KEY
+    },
+    json: true
+  }
+
+  const res = await rp(options)
+  const gigs = res.resultsPage.results.event
+  return gigs
+}
+
 module.exports = {
-  searchLocations
+  searchLocations,
+  getGigs
 }
