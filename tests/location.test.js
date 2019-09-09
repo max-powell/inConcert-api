@@ -11,25 +11,15 @@ test('Should return a list of locations given a valid search', async () => {
   expect(results).toEqual(expect.any(Array))
 
   const londonUK = results[0]
-  expect(londonUK).toEqual({location: 'London, UK', id: expect.any(Number)})
+  expect(londonUK).toEqual({name: 'London, UK', id: expect.any(Number)})
 
   const londonKY = results[1]
-  expect(londonKY).toEqual({location: 'London, KY, US'})
-})
-
-test('Should return an error given an invalid search', async () => {
-  const res = await request(app)
-    .get('/locations?query=1234')
-    .send()
-    .expect(404)
-
-  const error = res.body
-  expect(error.message).toBeTruthy()
+  expect(londonKY).toEqual({name: 'London, ON, Canada', id: expect.any(Number)})
 })
 
 test('Should return an error if no search term given', async () => {
   await request(app)
-    .get('/locations')
+    .get('/locations?query=')
     .send()
     .expect(400)
 })
