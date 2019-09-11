@@ -26,8 +26,8 @@ test("Should return tokens", async () => {
       state: 'GRsbc44XfJzw'
     })
 
-  expect(res.access_token).toBeTruthy()
-  expect(res.refresh_token).toBeTruthy()
+  expect(res.body.access_token).toBeTruthy()
+  expect(res.body.refresh_token).toBeTruthy()
 })
 
 test('Should send an error if error param given', async () => {
@@ -51,5 +51,5 @@ test('Should send error if state mismatch', async () => {
       state: ''
     })
     .send()
-    .expect(400)
+    .expect(401)
 })
