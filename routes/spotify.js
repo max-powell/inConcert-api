@@ -31,7 +31,34 @@ router.get('/authorize', async (req, res) => {
 })
 
 router.get('/callback', async (req, res) => {
-  res.send('/callback')
+  const code = req.query.code
+  const error = req.query.error
+  const state = req.query.state
+  const setState = req.cookies ? req.cookies[stateKey] : null
+
+  if (error) {
+    return res.status(400).send(error)
+  }
+
+  if (state === null || state !== setState) {
+    return res.status(401).send({error: 'State mismatch'})
+  }
+
+  res.clearCookie(stateKey)
+
+  try {
+    const authRes = await spotifyApi.authorizationCodeGrant(code)
+
+    res.send({
+      access_token: authRes.body.access_token,
+      refresh_token: authRes.body.refresh_token
+    })
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e)
+  }
+
+
 })
 
 module.exports = router
