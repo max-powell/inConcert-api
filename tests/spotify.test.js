@@ -17,7 +17,7 @@ test('Should redirect to Spotify auth on login', async () => {
 
 const authorizationCode = 'AQAPD1w8HZWt4WZaSVqy1vO8cEd1CuD2S-0oXwecRMGK2jY_5YviiSyVWcutpUuAA7VvRkcwOqKKzNs9i-78jZVKhe21fPAfLQT_QgwlhzLCUfKU7EkNZj6qMiT-GIyYQsHjTnSO2PFko98R3SXJFGAKZAUiFmn2mGukW5ZLPJvbeugKpRQBCEzQPM41QBs7758DRrzqnPPR_813pv30_E4INL9u3hw'
 
-test("Should return the user's data", async () => {
+test("Should return tokens", async () => {
   const res = await request(app)
     .get('/callback')
     .set('Cookie', 'spotify_auth_state=GRsbc44XfJzw')
@@ -26,7 +26,8 @@ test("Should return the user's data", async () => {
       state: 'GRsbc44XfJzw'
     })
 
-  expect(res.display_name).toBeTruthy()
+  expect(res.access_token).toBeTruthy()
+  expect(res.refresh_token).toBeTruthy()
 })
 
 test('Should send an error if error param given', async () => {
