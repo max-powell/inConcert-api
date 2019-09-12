@@ -2,6 +2,7 @@ const request = require('supertest')
 const app = require('../app')
 
 const setCookie = require('set-cookie-parser')
+const querystring = require('querystring')
 
 test('Should redirect to Spotify auth on login', async () => {
   const res = await request(app)
@@ -17,7 +18,7 @@ test('Should redirect to Spotify auth on login', async () => {
 
 const authorizationCode = 'AQAPD1w8HZWt4WZaSVqy1vO8cEd1CuD2S-0oXwecRMGK2jY_5YviiSyVWcutpUuAA7VvRkcwOqKKzNs9i-78jZVKhe21fPAfLQT_QgwlhzLCUfKU7EkNZj6qMiT-GIyYQsHjTnSO2PFko98R3SXJFGAKZAUiFmn2mGukW5ZLPJvbeugKpRQBCEzQPM41QBs7758DRrzqnPPR_813pv30_E4INL9u3hw'
 
-test("Should return tokens", async () => {
+test.skip("Should return tokens", async () => {
   const res = await request(app)
     .get('/callback')
     .set('Cookie', 'spotify_auth_state=GRsbc44XfJzw')
@@ -28,6 +29,22 @@ test("Should return tokens", async () => {
 
   expect(res.body.access_token).toBeTruthy()
   expect(res.body.refresh_token).toBeTruthy()
+})
+
+test("Should redirect to /auth page with tokens as query params", async () => {
+  const res = await request(app)
+    .get('/callback')
+    .set('Cookie', 'spotify_auth_state=GRsbc44XfJzw')
+    .query({
+      code: authorizationCode,
+      state: 'GRsbc44XfJzw'
+    })
+    .expect(302)
+
+  const queryStr = res.headers.location.match(/\?(\S+)/)[1]
+  const query = querystring.parse(queryStr)
+  expect(query.access_token).toBeTruthy()
+  expect(query.refresh_token).toBeTruthy()
 })
 
 test('Should send an error if error param given', async () => {
