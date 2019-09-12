@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const SpotifyWebApi = require('spotify-web-api-node')
+const querystring = require('querystring')
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -49,10 +50,10 @@ router.get('/callback', async (req, res) => {
   try {
     const authRes = await spotifyApi.authorizationCodeGrant(code)
 
-    res.send({
+    res.redirect('http://localhost:3001/auth?' + querystring.stringify({
       access_token: authRes.body.access_token,
       refresh_token: authRes.body.refresh_token
-    })
+    }))
   } catch (e) {
     console.log(e);
     res.status(500).send(e)
