@@ -5,6 +5,7 @@ var logger = require('morgan');
 
 var locationRouter = require('./routes/location');
 var gigRouter = require('./routes/gig');
+var spotifyRouter = require('./routes/spotify');
 
 var app = express();
 
@@ -16,5 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(locationRouter);
 app.use(gigRouter);
+app.use(spotifyRouter);
 
 module.exports = app;
