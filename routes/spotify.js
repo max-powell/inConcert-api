@@ -4,6 +4,8 @@ const router = express.Router()
 const SpotifyWebApi = require('spotify-web-api-node')
 const querystring = require('querystring')
 
+const { CLIENT_ROOT_URL } = require('../constants')
+
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
@@ -38,11 +40,15 @@ router.get('/callback', async (req, res) => {
   const setState = req.cookies ? req.cookies[stateKey] : null
 
   if (error) {
-    return res.status(400).send(error)
+    return res.redirect(`${CLIENT_ROOT_URL}/?` + querystring.stringify({
+      error
+    }))
   }
 
   if (state === null || state !== setState) {
-    return res.status(401).send({error: 'State mismatch'})
+    return res.redirect(`${CLIENT_ROOT_URL}/?` + querystring.stringify({
+      error: 'state_mismatch'
+    }))
   }
 
   res.clearCookie(stateKey)
@@ -50,7 +56,7 @@ router.get('/callback', async (req, res) => {
   try {
     const authRes = await spotifyApi.authorizationCodeGrant(code)
 
-    res.redirect('http://localhost:3001/auth?' + querystring.stringify({
+    res.redirect(`${CLIENT_ROOT_URL}/auth?` + querystring.stringify({
       access_token: authRes.body.access_token,
       refresh_token: authRes.body.refresh_token
     }))
