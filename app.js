@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(cors({origin: CLIENT_ROOT_URL}))
+app.use(cors({origin: CLIENT_ROOT_URL, credentials: true}))
 
 app.use(locationRouter)
 app.use(gigRouter)
