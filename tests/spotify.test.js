@@ -4,6 +4,12 @@ const app = require('../app')
 const setCookie = require('set-cookie-parser')
 const querystring = require('querystring')
 
+const parseQuery = url => {
+  const queryStr = url.match(/\?(\S+)/)[1]
+  return querystring.parse(queryStr)
+
+}
+
 test('Should redirect to Spotify auth on login', async () => {
   const res = await request(app)
     .get('/authorize')
@@ -28,14 +34,13 @@ test("Should redirect to /auth page with tokens as query params", async () => {
     })
     .expect(302)
 
-  const queryStr = res.headers.location.match(/\?(\S+)/)[1]
-  const query = querystring.parse(queryStr)
+  const query = parseQuery(res.headers.location)
   expect(query.access_token).toBeTruthy()
   expect(query.refresh_token).toBeTruthy()
 })
 
-test('Should send an error if error param given', async () => {
-  await request(app)
+test('Should redirect to client root if error param given', async () => {
+  const res = await request(app)
     .get('/callback')
     .set('Cookie', 'spotify_auth_state=GRsbc44XfJzw')
     .query({
@@ -43,11 +48,14 @@ test('Should send an error if error param given', async () => {
       state: 'GRsbc44XfJzw'
     })
     .send()
-    .expect(400)
+    .expect(302)
+
+    const query = parseQuery(res.headers.location)
+    expect(query.error).toBeTruthy()
 })
 
 test('Should send error if state mismatch', async () => {
-  await request(app)
+  const res = await request(app)
     .get('/callback')
     .set('Cookie', 'spotify_auth_state=GRsbc44XfJzw')
     .query({
@@ -55,5 +63,8 @@ test('Should send error if state mismatch', async () => {
       state: ''
     })
     .send()
-    .expect(401)
+    .expect(302)
+
+    const query = parseQuery(res.headers.location)
+    expect(query.error).toBe('state_mismatch')
 })
