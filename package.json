@@ -7,6 +7,9 @@
     "dev": "env-cmd -f ./config/dev.env nodemon ./bin/www",
     "test": "env-cmd -f ./config/test.env jest --watch --runInBand"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
